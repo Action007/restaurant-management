@@ -1,20 +1,21 @@
 package com.restaurant.menu.impl;
 
+import com.restaurant.entities.impl.DefaultStaff;
 import com.restaurant.menu.Menu;
+import com.restaurant.services.impl.DefaultStaffManagerService;
 import com.restaurant.state.ApplicationContext;
 
 public class SignOutMenu implements Menu {
   ApplicationContext context;
 
-  public SignOutMenu() {
-    this.context = ApplicationContext.getInstance();
+  public SignOutMenu(ApplicationContext context) {
+    this.context = context;
   }
 
   @Override
-  public MenuResult start() {
-    String firstName = context.getLoggedInStaff().getFirstName();
+  public void start() {
+    printHeader();
     context.setLoggedInStaff(null);
-    return new MenuResult(true, "Have a nice day " + firstName + "!", true);
   }
 
   @Override

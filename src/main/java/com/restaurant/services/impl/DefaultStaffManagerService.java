@@ -7,18 +7,10 @@ import com.restaurant.entities.impl.DefaultStaff;
 import com.restaurant.services.StaffManagementService;
 
 public class DefaultStaffManagerService implements StaffManagementService {
-  private static DefaultStaffManagerService instance;
   private HashMap<String, Staff> staffMap = new HashMap<>();
 
-  private DefaultStaffManagerService() {
+  public DefaultStaffManagerService() {
     staffMap.put("1000", new DefaultStaff("Default", "Manager", "1000", "manager", "Manager"));
-  }
-
-  public static DefaultStaffManagerService getInstance() {
-    if (instance == null) {
-      instance = new DefaultStaffManagerService();
-    }
-    return instance;
   }
 
   public String registerStaff(Staff staff) {
@@ -36,7 +28,7 @@ public class DefaultStaffManagerService implements StaffManagementService {
 
   public Staff login(String id, String password) {
     Staff staff = staffMap.get(id);
-    if (staff != null && staff.getPassword().equals(password)) {
+    if (staff != null && staff.isPasswordValid(password)) {
       return staff;
     } else {
       return null;

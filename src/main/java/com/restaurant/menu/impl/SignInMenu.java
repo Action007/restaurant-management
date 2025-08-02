@@ -1,36 +1,38 @@
 package com.restaurant.menu.impl;
 
+import java.util.Scanner;
+
 import com.restaurant.entities.Staff;
 import com.restaurant.menu.Menu;
 import com.restaurant.services.StaffManagementService;
 import com.restaurant.services.impl.DefaultStaffManagerService;
 import com.restaurant.state.ApplicationContext;
-import com.restaurant.utils.InputHandler;
 
 public class SignInMenu implements Menu {
-  StaffManagementService staffManagementService;
-  ApplicationContext context;
-  InputHandler inputHandler;
+  private StaffManagementService staffService;
+  private ApplicationContext context;
 
-  public SignInMenu() {
-    this.staffManagementService = DefaultStaffManagerService.getInstance();
-    this.context = ApplicationContext.getInstance();
-    this.inputHandler = new InputHandler();
+  public SignInMenu(StaffManagementService staffService, ApplicationContext context) {
+    this.staffService = staffService;
+    this.context = context;
   }
 
   private Staff initializeStaff() {
+    Scanner sc = new Scanner(System.in);
 
     while (true) {
-      String idString = inputHandler.getInput("Staff ID:");
-      if (inputHandler.isMenuCommand(idString)) {
+      System.err.println("Staff ID:");
+      String idString = sc.nextLine();
+      if (context.isMenuCommand(idString)) {
         return null;
       }
-      String passwoString = inputHandler.getInput("Password:");
-      if (inputHandler.isMenuCommand(passwoString)) {
+      System.err.println("Password:");
+      String passwoString = sc.nextLine();
+      if (context.isMenuCommand(passwoString)) {
         return null;
       }
 
-      Staff staff = staffManagementService.login(idString, passwoString);
+      Staff staff = staffService.login(idString, passwoString);
 
       if (staff == null) {
         System.err.println("Incorrect ID or password.");
@@ -46,6 +48,9 @@ public class SignInMenu implements Menu {
   public void start() {
     printHeader();
     Staff staff = initializeStaff();
+    if (staff == null) {
+      return;
+    }
     context.setLoggedInStaff(staff);
     System.err.println("Welcome back" + context.getLoggedInStaff().getFirstName() + "!");
   }

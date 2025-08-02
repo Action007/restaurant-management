@@ -10,4 +10,8 @@ public interface Staff {
   public String getPassword();
 
   public StaffRole getRole();
+
+  public StaffRole validateStaffRole(String role);
+
+  public boolean isPasswordValid(String candidate);
 }

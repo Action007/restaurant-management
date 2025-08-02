@@ -1,45 +1,50 @@
 package com.restaurant.menu.impl;
 
+import java.util.Scanner;
+
 import com.restaurant.entities.Staff;
 import com.restaurant.entities.impl.DefaultStaff;
 import com.restaurant.menu.Menu;
 import com.restaurant.services.StaffManagementService;
-import com.restaurant.services.impl.DefaultStaffManagerService;
 import com.restaurant.state.ApplicationContext;
-import com.restaurant.utils.InputHandler;
 
 public class SignUpMenu implements Menu {
-  StaffManagementService staffManagementService;
-  ApplicationContext context;
-  InputHandler inputHandler;
+  private StaffManagementService staffService;
+  private ApplicationContext context;
 
-  public SignUpMenu() {
-    this.context = ApplicationContext.getInstance();
-    this.staffManagementService = DefaultStaffManagerService.getInstance();
-    this.inputHandler = new InputHandler();
+  public SignUpMenu(StaffManagementService staffService, ApplicationContext context) {
+    this.staffService = staffService;
+    this.context = context;
   }
 
   private Staff initializeStaff() {
+    Scanner sc = new Scanner(System.in);
+
     while (true) {
       try {
-        String firstName = inputHandler.getInput("Enter First Name:");
-        if (inputHandler.isMenuCommand(firstName)) {
+        System.err.println("Enter First Name:");
+        String firstName = sc.nextLine();
+        if (context.isMenuCommand(firstName)) {
           return null; // cancel registration
         }
-        String lastName = inputHandler.getInput("Enter Last Name:");
-        if (inputHandler.isMenuCommand(lastName)) {
+        System.err.println("Enter Last Name:");
+        String lastName = sc.nextLine();
+        if (context.isMenuCommand(lastName)) {
           return null; // cancel registration
         }
-        String id = inputHandler.getInput("Enter Id:");
-        if (inputHandler.isMenuCommand(id)) {
+        System.err.println("Enter Id:");
+        String id = sc.nextLine();
+        if (context.isMenuCommand(id)) {
           return null; // cancel registration
         }
-        String password = inputHandler.getInput("Enter Password:");
-        if (inputHandler.isMenuCommand(password)) {
+        System.err.println("Enter Password:");
+        String password = sc.nextLine();
+        if (context.isMenuCommand(password)) {
           return null; // cancel registration
         }
-        String role = inputHandler.getInput("Enter Role:");
-        if (inputHandler.isMenuCommand(role)) {
+        System.err.println("Enter Role:");
+        String role = sc.nextLine();
+        if (context.isMenuCommand(role)) {
           return null; // cancel registration
         }
         Staff staff = new DefaultStaff(firstName, lastName, id, password, role);
@@ -57,7 +62,7 @@ public class SignUpMenu implements Menu {
 
     Staff staff = initializeStaff();
 
-    String errorMessage = staffManagementService.registerStaff(staff);
+    String errorMessage = staffService.registerStaff(staff);
     if (errorMessage.isEmpty()) {
       context.setLoggedInStaff(staff);
       System.err.println("Staff member created successfully.");

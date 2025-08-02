@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import com.restaurant.menu.Menu;
+import com.restaurant.services.StaffManagementService;
 import com.restaurant.state.ApplicationContext;
 
 public class MainMenu implements Menu {
-  ApplicationContext context = ApplicationContext.getInstance();
+  private StaffManagementService staffService;
+  private ApplicationContext context;
 
   public final HashMap<String, Menu> unauthorizedMenuOptionMap = new HashMap<>();
   public final HashMap<String, Menu> authorizedMenuOptionMap = new HashMap<>();
@@ -18,11 +20,14 @@ public class MainMenu implements Menu {
   public final String MENU_INFO_AUTHORIZED = "1. Staff Sign Out";
   public final String ERROR_MESSAGE = "Only 1, 2, 3, 4, 5 is allowed. Try again.";
 
-  public MainMenu() {
-    unauthorizedMenuOptionMap.put("1", new SignUpMenu());
-    unauthorizedMenuOptionMap.put("2", new SignInMenu());
+  public MainMenu(StaffManagementService staffService, ApplicationContext context) {
+    this.staffService = staffService;
+    this.context = context;
 
-    authorizedMenuOptionMap.put("1", new SignOutMenu());
+    unauthorizedMenuOptionMap.put("1", new SignUpMenu(staffService, context));
+    unauthorizedMenuOptionMap.put("2", new SignInMenu(staffService, context));
+
+    authorizedMenuOptionMap.put("1", new SignOutMenu(context));
   }
 
   @Override
@@ -42,10 +47,7 @@ public class MainMenu implements Menu {
       }
 
       if (menu != null) {
-        MenuResult result = menu.start();
-        if (result.getMessage() != null && !result.getMessage().isEmpty()) {
-          System.err.println(result.getMessage());
-        }
+        menu.start();
       } else {
         System.err.println(ERROR_MESSAGE);
       }
